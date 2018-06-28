@@ -1,3 +1,2 @@
-dspace-src
 dspace-build
-m2-repo
+**/target/*

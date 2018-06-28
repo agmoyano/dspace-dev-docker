@@ -1,5 +1,5 @@
 <Context 
-  docBase="/srv/dspace-src/dspace/modules/rest/target/rest-5.5"
+  docBase="/srv/dspace/webapps/rest"
   reloadable="true" 
 >
 	<JarScanner scanClassPath="false" scanAllFiles="false" scanAllDirectories="false"/>
