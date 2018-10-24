@@ -97,8 +97,6 @@ RUN export uid=1000 gid=1000 && \
 #RUN unzip probe.zip
 #RUN mv probe.war $CATALINA_HOME/webapps/probe.war
 
-COPY conf $CATALINA_HOME/conf
-
 RUN npm install -g grunt bower
 
 ###
@@ -140,6 +138,7 @@ RUN echo "source ~/.profile" >> ~/.bashrc
 #Link DSpace binary
 RUN sudo ln -s /srv/dspace/bin/dspace /usr/bin/dspace
 
+COPY conf $CATALINA_HOME/conf
 COPY dspace-src /srv/dspace-src
 COPY m2-repo /home/dspace/.m2
 RUN sudo chown -R dspace:dspace \
@@ -150,17 +149,21 @@ RUN sudo chown -R dspace:dspace \
 WORKDIR /srv/dspace-src
 
 
-ENV GEM_HOME=/home/dspace/.rvm/gems/ruby-2.4.1
-ENV GEM_PATH=/home/dspace/.rvm/gems/ruby-2.4.1:/home/dspace/.rvm/gems/ruby-2.4.1@global
-ENV PATH=$PATH:/home/dspace/.rvm/rubies/ruby-2.4.1/bin:/home/dspace/.rvm/gems/ruby-2.4.1/bin/
+ENV GEM_HOME=/home/dspace/.rvm/gems/ruby-2.5.1
+ENV GEM_PATH=/home/dspace/.rvm/gems/ruby-2.5.1:/home/dspace/.rvm/gems/ruby-2.5.1@global
+ENV PATH=$PATH:/home/dspace/.rvm/rubies/ruby-2.5.1/bin:/home/dspace/.rvm/gems/ruby-2.5.1/bin/
 
-RUN mvn -Dmirage2.on=true -Dmirage2.deps.included=false package;
+RUN whoami; pwd; ruby --version; compass --version;
+RUN bash -c "mvn -Dmirage2.on=true -Dmirage2.deps.included=false package"
 RUN rm -rf /srv/dspace/webapps/*;\
     ant -f /srv/dspace-src/dspace/target/dspace-installer/build.xml install_code;\
     ant -f /srv/dspace-src/dspace/target/dspace-installer/build.xml copy_webapps;\
     ant -f /srv/dspace-src/dspace/target/dspace-installer/build.xml init_geolite;
 
 FROM tomcat:8.0-alpine
+
+RUN apk add --update libreoffice imagemagick ghostscript; \
+    rm -f /var/cache/apk/*
 
 COPY conf $CATALINA_HOME/conf
 

@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         ant \
         maven \
         unzip \
-	libreoffice-base
+	libreoffice
 
 # Define commonly used JAVA_HOME variable
 ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
